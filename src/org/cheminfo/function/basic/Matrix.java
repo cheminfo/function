@@ -4,7 +4,7 @@ import org.cheminfo.function.Function;
 import org.cheminfo.function.util.ArrayConverter;
 import org.jblas.DoubleMatrix;
 
-import sun.org.mozilla.javascript.internal.NativeArray;
+import org.mozilla.javascript.NativeArray;
 
 /**
  * 

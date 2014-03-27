@@ -11,7 +11,7 @@
 
 package com.threecrickets.rhino;
 
-import sun.org.mozilla.javascript.internal.ScriptableObject;
+import org.mozilla.javascript.ScriptableObject;
 
 import com.threecrickets.rhino.internal.JsonException;
 

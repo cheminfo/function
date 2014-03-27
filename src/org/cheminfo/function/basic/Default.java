@@ -27,7 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
 
-import sun.org.mozilla.javascript.internal.Scriptable;
+import org.mozilla.javascript.Scriptable;
 
 
 /**

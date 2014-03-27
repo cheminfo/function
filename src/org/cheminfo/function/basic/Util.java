@@ -15,7 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import sun.org.mozilla.javascript.internal.NativeArray;
+import org.mozilla.javascript.NativeArray;
 
 
 /**

@@ -2,7 +2,7 @@ package org.cheminfo.function.util;
 
 import org.cheminfo.function.exception.InvalidTypeException;
 
-import sun.org.mozilla.javascript.internal.NativeArray;
+import org.mozilla.javascript.NativeArray;
 
 /**
  * This class provides static methods to convert data to the desired type

@@ -32,8 +32,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import sun.org.mozilla.javascript.internal.Scriptable;
-import sun.org.mozilla.javascript.internal.ScriptableObject;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 
 import com.threecrickets.rhino.util.NativeRhinoUtil;
 

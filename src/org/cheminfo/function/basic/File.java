@@ -11,7 +11,7 @@ import org.cheminfo.function.Function;
 import org.cheminfo.function.scripting.SecureFileManager;
 import org.cheminfo.function.util.ArrayConverter;
 
-import sun.org.mozilla.javascript.internal.Scriptable;
+import org.mozilla.javascript.Scriptable;
 
 
 /**

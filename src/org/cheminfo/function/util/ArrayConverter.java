@@ -5,10 +5,10 @@ import org.json.JSONException;
 
 import com.threecrickets.rhino.util.NativeRhinoUtil;
 
-import sun.org.mozilla.javascript.internal.NativeArray;
-import sun.org.mozilla.javascript.internal.NativeJavaArray;
-import sun.org.mozilla.javascript.internal.Scriptable;
-import sun.org.mozilla.javascript.internal.ScriptableObject;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.NativeJavaArray;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 /**
  * A set of array types converters.
  * @author mzasso and acastillo

@@ -1,3 +1,6 @@
 /bin
 /dependencies
 /jars
+/nbproject/private/
+/build/
+/dist/

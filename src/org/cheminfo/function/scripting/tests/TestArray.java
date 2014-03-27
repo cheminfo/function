@@ -12,7 +12,7 @@ public class TestArray {
 
 	
 	public static void main(String[] args) {
-		ScriptingInstance interpreter = new ScriptingInstance("/usr/local/script/plugins/");
+		ScriptingInstance interpreter = new ScriptingInstance("");
 		interpreter.setSafePath("./");
 		String script = getContents(new File("jsexamples/checkArray.js"));
 

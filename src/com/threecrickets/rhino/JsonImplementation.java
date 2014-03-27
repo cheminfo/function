@@ -15,11 +15,11 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-import sun.org.mozilla.javascript.internal.NativeArray;
-import sun.org.mozilla.javascript.internal.NativeJavaObject;
-import sun.org.mozilla.javascript.internal.ScriptRuntime;
-import sun.org.mozilla.javascript.internal.ScriptableObject;
-import sun.org.mozilla.javascript.internal.Undefined;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.NativeJavaObject;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Undefined;
 
 import com.threecrickets.rhino.internal.JsonException;
 import com.threecrickets.rhino.internal.JsonTokener;

@@ -13,15 +13,13 @@ package com.threecrickets.rhino.util;
 
 import java.util.Date;
 import java.util.regex.Pattern;
-
-import sun.org.mozilla.javascript.internal.Context;
-import sun.org.mozilla.javascript.internal.Function;
-import sun.org.mozilla.javascript.internal.NativeJavaObject;
-import sun.org.mozilla.javascript.internal.ScriptRuntime;
-import sun.org.mozilla.javascript.internal.Scriptable;
-import sun.org.mozilla.javascript.internal.ScriptableObject;
-import sun.org.mozilla.javascript.internal.regexp.NativeRegExp;
-
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.NativeJavaObject;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.regexp.NativeRegExp;
 /**
  * Conversion between native Rhino objects and JVM equivalents.
  * 
