@@ -1,0 +1,10 @@
+var molfile = load('jsexamples/mol2.mol');
+var spinus = SD.spinusPred1H(molfile);
+//out.println(JSON.stringify(spinus));
+var spectraData = SD.simulateNMRSpectrum(spinus,{from:0,to:10,nbPoints:1024*64,maxClusterSize:9});
+spectraData.fourierTransform();
+var jcamp = spectraData.toJcamp({encode:'DIFDUP',yfactor:0.01,type:"SIMPLE"});
+save('jsexamples/output.jdx',jcamp);
+//jexport('jcamp',{type:'jcamp',value:jcamp});
+//jexport('molfile',{type:"mol2d", value:molfile});
+//jexport('spinus',spinus);

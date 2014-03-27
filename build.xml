@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="scripting" name="Create Runnable Jar for Project function">
+   
+	<taskdef resource="proguard/ant/task.properties" classpath="../library/lib/proguard4_9.jar" />
+	<property name="depdir" location="dependencies" />
+	
+	<target name="propconfig">
+		<echo>Java home is ${java.home}</echo>
+		<!-- this seems cumbersome but ant does not allow to alter properties! -->
+		<condition property="pglibs" value="-libraryjars ${java.home}/lib/rt.jar">
+			<os family="mac" />
+		</condition>
+		<condition property="pglibs" value='-libraryjars "${java.home}\\lib\\rt.jar"'>
+			<os family="windows" />
+		</condition>
+		<condition property="pglibs" value="-libraryjars ${java.home}/lib/rt.jar">
+			<os family="unix" />
+		</condition>
+		<condition property="rhino_call" value="extract_rhino" else="dummy">
+			<istrue value="${use_rhino}" />
+		</condition>
+		<tstamp>
+			<format property="build_time" pattern="yyyy-MM-dd-HH" timezone="Europe/Zurich" />
+		</tstamp>
+		<echo>Current build time ${build_time}</echo>
+		<echo>Creating build properties file</echo>
+		<propertyfile file="./bin/build.info">
+			<entry key="build_time" value="${build_time}" />
+		</propertyfile>
+	</target>
+	<!--
+	Clean the dependency directory
+	-->
+	<target name="clean">
+		<delete dir="${depdir}" />
+	</target>
+	<!--
+	To begin with extract all required jars into the dependencies directory 
+	-->
+	<target name="prepare" depends="propconfig">
+		<antcall target="clean">
+		</antcall>
+		<mkdir dir="${depdir}" />
+		<unjar  src="../library/lib/httpmime-4.3.jar" dest="${depdir}" />
+		<unjar  src="../library/lib/httpcore-4.3.jar" dest="${depdir}" />
+		<unjar  src="../library/lib/httpclient-4.3.jar" dest="${depdir}" />
+		<unjar  src="../library/lib/commons-logging-1.1.3.jar" dest="${depdir}" />
+		<unjar  src="../library/lib/commons-lang3-3.0.1.jar" dest="${depdir}" />
+		<unjar  src="../library/lib/commons-io-2.4.jar" dest="${depdir}" />
+		<unjar  src="../library/lib/commons-codec-1.6.jar" dest="${depdir}" />
+		<unjar  src="../library/lib/commons-email-1.3.1.jar" dest="${depdir}" />
+		<unjar  src="../library/lib/javax.mail.jar" dest="${depdir}" />
+		<unjar  src="../library/lib/json.jar" dest="${depdir}" />
+		<unjar  src="../library/lib/jblas-1.2.3.jar" dest="${depdir}" />
+	</target>
+	
+	<target name="function-full" depends="prepare">
+		<mkdir dir="jars" />
+		<delete file="jars/function-full.jar" />
+		<jar destfile="jars/function-full.jar" level="9">
+			<fileset dir="bin">
+				<exclude name="tests/**" />
+				<exclude name="**/tests/**" />
+				<exclude name="**/tests/*.class" />
+			</fileset>
+			<fileset dir="${depdir}">
+				<exclude name="META-INF/**" />
+				<exclude name="**/*.java" />
+				<exclude name="**/*.mol" />
+				<exclude name="**/*dx" />
+				<exclude name="**/*.dtd" />
+				<exclude name="**/README" />
+				<exclude name="**/version.properties" />
+				<exclude name="**/log4j.properties" />
+				<exclude name="**/build.properties" />
+				<exclude name="**/plugins/*.jar" />
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="scripting-noproguard" depends="function-full">
+		<copy file="./jars/function-full.jar" tofile="../script/WebContent/WEB-INF/lib/scripting.jar">
+		</copy>
+	</target>
+		
+	<target name="scripting" depends="function-full">
+		<proguard>
+			${pglibs}
+			-ignorewarnings -verbose
+			
+			-libraryjars ../library/lib/comm.jar
+			
+			
+			-injars      jars/function-full.jar
+			-outjars     jars/scripting.jar				
+			
+			-keep public class org.json.* { *; }
+			-keep public class org.cheminfo.scripting.* { *; } 
+			-keep public class org.cheminfo.scripting.*.* {public *;} 
+			-keep public class org.cheminfo.function.*.* {public *;} 
+			-keep public class org.cheminfo.function.scripting.* {public *;} 
+			-keep public class org.cheminfo.function.Function {public *;} 
+			-keep public class org.cheminfo.iplugin.* {public *;} 
+			-keep public final class org.mozilla.javascript.* { *; }
+			-keep public class org.mozilla.javascript.* { *; }
+			-keep public interface org.mozilla.javascript.* {* ; } 
+			-keep public class org.apache.commons.lang3.* {public *; }
+			-keep public class org.apache.commons.logging.impl.* { *; }
+			-keep public class org.apache.commons.codec.binary.Base64 {public *;}
+			-keep public class org.apache.commons.mail.* { *; }
+			-keep public class com.sun.mail.smtp.* { *; }
+			-keep public class org.apache.http.auth.Credentials {public *;}
+			-keep public class org.apache.http.entity.mime.content.ContentBody {public *;}
+			-keep public class * extends sun.org.mozilla.javascript.internal.VMBridge
+			-keep public abstract class sun.org.mozilla.javascript.VMBridge_custom { *; }
+			-keep public class sun.org.mozilla.javascript.jdk15.VMBridge_jdk15 { *; }
+			-keep public class sun.org.mozilla.javascript.jdk13.VMBridge_jdk13 { *; }
+			-keep public class sun.org.mozilla.javascript.jdk11.VMBridge_jdk11 { *; }
+		
+		</proguard>
+		<!-- For testing the scripting language with a plugin" -->
+		<copy todir="../script/WebContent/WEB-INF/lib">
+		  <fileset dir="./jars/" includes="scripting.jar"
+		  />
+		</copy>
+	</target>
+</project>
