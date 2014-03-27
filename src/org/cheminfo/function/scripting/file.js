@@ -370,11 +370,6 @@ var __context = this;
 					for (var i=0; i<lines.length; i++) {
 						if (lines[i].match(/^[ \t,;:]*$/)==null) {
 							var fields=lines[i].split(delimiter);
-							var result={};
-							results.push(result);
-							for (var j=0; j<fields.length; j++) {
-								result["f"+j]=fields[j];
-							}
 							results.push(fields);
 						}
 					}
