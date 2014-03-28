@@ -10,7 +10,9 @@ import java.util.zip.ZipException;
 import org.cheminfo.function.Function;
 import org.cheminfo.function.scripting.SecureFileManager;
 import org.cheminfo.function.util.ArrayConverter;
-
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.XML;
 import org.mozilla.javascript.Scriptable;
 
 
@@ -43,6 +45,16 @@ public class File extends Function {
 			return ArrayConverter.javaArrayToJSArray(new String[0]);
 		}
 		return ArrayConverter.javaArrayToJSArray(toReturn);
+	}
+	
+	public String xmlToJSON(String input) {
+		try {
+			JSONObject xmlJSONobj = XML.toJSONObject(input);
+			return xmlJSONobj.toString();
+		} catch (JSONException e) {
+			appendError("xmlToJSON","xmlToJSON : Error parsing the XML<br>"+e.getMessage());
+		}
+		return "";
 	}
 	
 	public Scriptable zip(String basedir, String key, String filename, String zipFilename) {

@@ -391,6 +391,16 @@ var __context = this;
 			*/
 			download: function(url, filename){
 				return FILELIB.download(Global.basedir, Global.basedirkey, File.checkGlobal(filename), url);
+			},
+			
+			/**
+			 * @function	xmlToJSON(input)
+			 * Converts an XML string to JSON
+			 * @param	input:string	String containing the XML
+			 * @return	+Object	The parsed object
+			 */
+			xmlToJSON: function(input) {
+				return JSON.parse(FILELIB.xmlToJSON(input));
 			}
 			
 		};
