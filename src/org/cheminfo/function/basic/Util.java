@@ -14,7 +14,7 @@ import org.cheminfo.function.util.ArrayConverter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import org.json.XML;
 import org.mozilla.javascript.NativeArray;
 
 
@@ -165,6 +165,16 @@ public class Util extends Function{
 		
 		
 		return h;
+	}
+	
+	public String xml2json(String input) {
+		try {
+			JSONObject xmlJSONobj = XML.toJSONObject(input);
+			return xmlJSONobj.toString();
+		} catch (JSONException e) {
+			appendError("Util.xmlToJSON","Util.xmlToJSON : Error parsing the XML<br>"+e.getMessage());
+		}
+		return "";
 	}
 	
 }

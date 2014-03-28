@@ -47,16 +47,6 @@ public class File extends Function {
 		return ArrayConverter.javaArrayToJSArray(toReturn);
 	}
 	
-	public String xmlToJSON(String input) {
-		try {
-			JSONObject xmlJSONobj = XML.toJSONObject(input);
-			return xmlJSONobj.toString();
-		} catch (JSONException e) {
-			appendError("xmlToJSON","xmlToJSON : Error parsing the XML<br>"+e.getMessage());
-		}
-		return "";
-	}
-	
 	public Scriptable zip(String basedir, String key, String filename, String zipFilename) {
 		String[] toReturn=null;
 		try {

@@ -106,7 +106,7 @@ var Util = {
 	 * @param	object:+Object			object to convert to XML
 	 * @return	string
 	 */
-	json2xml : function json2xml(o, tab) {
+	json2xml : function(o, tab) {
 		var toXml = function(v, name, ind) {
 			var xml = "";
 			if (v instanceof Array) {
@@ -144,6 +144,16 @@ var Util = {
 		for ( var m in o)
 			xml += toXml(o[m], m, "");
 		return tab ? xml.replace(/\t/g, tab) : xml.replace(/\t|\n/g, "");
+	},
+	
+	/**
+	 * @function	xml2json(input)
+	 * Converts an XML string to JSON
+	 * @param	input:string	String containing the XML
+	 * @return	+Object	The parsed object
+	 */
+	xml2json: function(input) {
+		return JSON.parse(UTILLIB.xml2json(input));
 	}
 
 }
