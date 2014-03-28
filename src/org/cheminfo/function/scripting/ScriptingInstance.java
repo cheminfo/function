@@ -11,10 +11,9 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ContextFactory;
+import org.mozilla.javascript.Scriptable;
 import org.cheminfo.function.Function;
 import org.cheminfo.function.basic.Console;
 import org.cheminfo.function.util.JavaScriptMin;
@@ -26,8 +25,10 @@ import org.json.JSONObject;
 public class ScriptingInstance implements Runnable {
 	private static final boolean DEBUG=false;
 
-	private ScriptEngineManager mgr=new ScriptEngineManager();
-	private ScriptEngine jsEngine=mgr.getEngineByName("JavaScript");
+	//private ScriptEngineManager mgr=new ScriptEngineManager();
+	//private ScriptEngine jsEngine=mgr.getEngineByName("JavaScript");
+	private Context ctx;
+	private Scriptable scope;
 
 	private String script="";
 	private JSONObject result=null;
@@ -93,9 +94,9 @@ public class ScriptingInstance implements Runnable {
 		return console;
 	}
 
-	public ScriptEngine getJsEngine() {
+	/*public ScriptEngine getJsEngine() {
 		return jsEngine;
-	}
+	}*/
 
 	public void setSafePath(String path) {
 		try {
@@ -124,6 +125,9 @@ public class ScriptingInstance implements Runnable {
 
 	private void initializeAPIs() {
 		try {
+			ContextFactory factory = new ContextFactory();
+			ctx = factory.enterContext();
+			scope = ctx.initStandardObjects();
 			InputStream stream = getClass().getResourceAsStream("/org/cheminfo/function/scripting/apis.properties");
 			Properties javascriptProperties = readProperties(stream);
 			Set<Object> keySet = javascriptProperties.keySet();
@@ -149,7 +153,7 @@ public class ScriptingInstance implements Runnable {
 		} catch (IOException e) {
 			System.out.println("javascript properties could not be read");
 		}
-		jsEngine.put("out", System.out);
+		addObjectToScope("out", System.out);
 	}
 
 	/**
@@ -228,7 +232,7 @@ public class ScriptingInstance implements Runnable {
 						Function plugin = (Function)ObjectFactory.create(pluginName, name, classLoader);
 						plugin.setScriptingInstance(this);
 						alias=(String)o;					
-						jsEngine.put(alias,plugin);
+						addObjectToScope(alias,plugin);
 
 						if(DEBUG)System.out.println(pluginName+": "+name);
 						InputStream is = ObjectFactory.readProperties(pluginName,name.replace(".","/")+".js",classLoader);					
@@ -257,7 +261,7 @@ public class ScriptingInstance implements Runnable {
 		try {
 			Function function = (Function)Class.forName(nameClass).newInstance();
 			function.setScriptingInstance(this);
-			jsEngine.put(alias,function);
+			addObjectToScope(alias,function);
 		} catch (Exception e) {
 			if (DEBUG) System.out.println("ScriptingInstance: CLASS error: "+nameClass+" - "+e.toString());
 		}
@@ -282,8 +286,9 @@ public class ScriptingInstance implements Runnable {
 				e1.printStackTrace();
 			}
 
-			try {
-				jsEngine.eval(javaScriptProcessor.getCodeJS().toString());
+			//try {
+				ctx.evaluateString(scope, javaScriptProcessor.getCodeJS().toString(), null, 0, null);
+				//jsEngine.eval(javaScriptProcessor.getCodeJS().toString());
 				if(helpOK&&javaScriptProcessor.getHelpJSON().length()>0){
 					JSONObject help = javaScriptProcessor.getHelpJSON();
 					try {
@@ -292,10 +297,10 @@ public class ScriptingInstance implements Runnable {
 						e.printStackTrace();
 					}
 				}
-			} catch (ScriptException e) {
-				System.err.append("Problems evaluating the javascript \n"+javaScriptProcessor.getCodeJS().toString());
-				e.printStackTrace();
-			}
+			//} catch (ScriptException e) {
+			//	System.err.append("Problems evaluating the javascript \n"+javaScriptProcessor.getCodeJS().toString());
+			//	e.printStackTrace();
+			//}
 
 			if(DEBUG)System.out.println("JS frontage found and loaded for this class");
 		}
@@ -323,11 +328,13 @@ public class ScriptingInstance implements Runnable {
 	}
 
 	public void addObjectToScope(String nameInScope, Object o) {
-		jsEngine.put(nameInScope, o);
+		scope.put(nameInScope, scope, o);
+		//jsEngine.put(nameInScope, o);
 	}
 
 	public Object getObjectFromScope(String nameInScope){
-		return jsEngine.get(nameInScope);
+		return scope.get(nameInScope, scope);
+		//return jsEngine.get(nameInScope);
 	}
 
 
@@ -362,8 +369,8 @@ public class ScriptingInstance implements Runnable {
 		
 		try {
 			addObjectToScope("toReturn",toReturn);
-			
-			jsEngine.eval(script);
+			ctx.evaluateString(scope, script, null, 0, null);
+			//jsEngine.eval(script);
 			/*
 			try {
 				allToReturn.put("result", toReturn);
@@ -371,12 +378,12 @@ public class ScriptingInstance implements Runnable {
 				e.printStackTrace(System.out);
 			}
 			 */
-		} catch (ScriptException e) {
+		} /*catch (ScriptException e) {
 			e.printStackTrace(System.out);
 			if (console!=null) {
 				console.log(Console.FATAL,"",e.getMessage(),"");
 			}
-		} finally {
+		}*/ finally {
 			if (console!=null) {
 				try {
 					toReturn.put("_logs", console.getLogs());

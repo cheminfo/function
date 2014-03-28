@@ -27,11 +27,11 @@ public abstract class Function {
 			return new JSONArray();
 		}
 		try {
-			Class<?> nativeArray = Class.forName("sun.org.mozilla.javascript.internal.NativeArray");
-			Class<?> nativeObject = Class.forName("sun.org.mozilla.javascript.internal.NativeObject");
+			Class<?> nativeArray = Class.forName("org.mozilla.javascript.NativeArray");
+			Class<?> nativeObject = Class.forName("org.mozilla.javascript.NativeObject");
 			if(nativeArray!=null){
-				Class<?> scriptable = Class.forName("sun.org.mozilla.javascript.internal.Scriptable");
-				//if(param instanceof sun.org.mozilla.javascript.internal.NativeObject){
+				Class<?> scriptable = Class.forName("org.mozilla.javascript.Scriptable");
+				//if(param instanceof org.mozilla.javascript.NativeObject){
 				if(nativeArray.isInstance(param)){
 					Object object = nativeArray.cast(param);
 					Method getAllIds=null,get=null;
@@ -46,7 +46,7 @@ public abstract class Function {
 						get = nativeArray.getMethod("get", params);
 						//System.out.println(get);
 						
-						//sun.org.mozilla.javascript.internal.NativeObject object = (sun.org.mozilla.javascript.internal.NativeObject)param;
+						//org.mozilla.javascript.NativeObject object = (org.mozilla.javascript.NativeObject)param;
 						try {
 							ids =(Object[])getAllIds.invoke(object,null);
 						} catch (IllegalArgumentException e) {
@@ -168,11 +168,11 @@ public abstract class Function {
 		}
 		//Try to cast the js object
 		try {
-			Class<?> nativeArray = Class.forName("sun.org.mozilla.javascript.internal.NativeArray");
-			Class<?> nativeObject = Class.forName("sun.org.mozilla.javascript.internal.NativeObject");
+			Class<?> nativeArray = Class.forName("org.mozilla.javascript.NativeArray");
+			Class<?> nativeObject = Class.forName("org.mozilla.javascript.NativeObject");
 			if(nativeObject!=null){
-				Class<?> scriptable = Class.forName("sun.org.mozilla.javascript.internal.Scriptable");
-				//if(param instanceof sun.org.mozilla.javascript.internal.NativeObject){
+				Class<?> scriptable = Class.forName("org.mozilla.javascript.Scriptable");
+				//if(param instanceof org.mozilla.javascript.NativeObject){
 				if(nativeObject.isInstance(param)){
 					Object object = nativeObject.cast(param);
 					Method getAllIds=null,get=null;
@@ -189,7 +189,7 @@ public abstract class Function {
 								getAllIds=m;*/
 						getAllIds = nativeObject.getMethod("getAllIds",null);						
 						get = nativeObject.getMethod("get", params);
-						//sun.org.mozilla.javascript.internal.NativeObject object = (sun.org.mozilla.javascript.internal.NativeObject)param;
+						//org.mozilla.javascript.NativeObject object = (org.mozilla.javascript.NativeObject)param;
 						try {
 							ids =(Object[]) getAllIds.invoke(object,null);//, (Class<?>)null);
 						} catch (IllegalArgumentException e) {

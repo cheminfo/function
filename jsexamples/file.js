@@ -1,5 +1,9 @@
+out.println(Global.basedir);
+out.println(Global.basedirkey);
+Global.currentDir = "/jsexamples";
+out.println("plop")
+var dir=File.dir(".",{filter:"jdx"});
 
-
-var dir=File.dir(".",{filter:"xml"});
-
+out.println("plip")
+out.println(dir);
 jexport("dir",dir);

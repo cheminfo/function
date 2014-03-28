@@ -16,8 +16,8 @@ var __context = this;
 			},
 			
 			checkGlobal: function(filename) {
-				if (! Global.basedir || ! Global.basedirkey)
-					return Default.appendError("Undefined path","Undefined Global.basedir and Global.basedirkey. Please check that the instance of ScriptingInstance has a basedir specified (using setSafePath). Filename: "+filename)
+				if (! Global.basedir || ! Global.basedirkey || !Global.currentDir)
+					return Default.appendError("Undefined path","Undefined Global directory variables. Please check that the instance of ScriptingInstance has a basedir specified (using setSafePath). Filename: "+filename)
 				return File.getCanonicalPath(filename);
 			},
 			

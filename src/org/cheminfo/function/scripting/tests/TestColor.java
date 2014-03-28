@@ -12,9 +12,9 @@ public class TestColor {
 
 	
 	public static void main(String[] args) {
-		ScriptingInstance interpreter = new ScriptingInstance("/usr/local/script/plugins/");
+		ScriptingInstance interpreter = new ScriptingInstance("");
 		interpreter.setSafePath("./");
-		String script = getContents(new File("jsexamples/color.js"));
+		String script = getContents(new File("jsexamples/file.js"));
 
 		
 		System.out.println(interpreter.runScript(script));
