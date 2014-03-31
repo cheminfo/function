@@ -16,7 +16,7 @@ import org.json.JSONObject;
  *
  */
 public abstract class Function {
-	
+	//Hello
 	//public static JSONObject log=new JSONObject();
 	//public static int logLevel=1;
 	private ScriptingInstance scriptingInstance;
