@@ -23,7 +23,7 @@ public abstract class Function {
 	
 	public JSONArray checkJSONArray(Object param){
 		JSONArray json = null;
-		if(param==null || (param instanceof String && param.equals("undefined"))) {
+		if(param == null || (param instanceof String && param.equals("undefined"))) {
 			return new JSONArray();
 		}
 		try {
