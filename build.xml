@@ -53,7 +53,7 @@
 		<unjar  src="${libdir}/javax.mail.jar" dest="${depdir}" />
 		<unjar  src="${libdir}/json.jar" dest="${depdir}" />
 		<unjar  src="${libdir}/jblas-1.2.3.jar" dest="${depdir}" />
-		<unjar	src="lib/js.jar" dest="${depdir}" />
+		<unjar	src="${libdir}/cheminfo.js.jar" dest="${depdir}" />
 	</target>
 	
 	<target name="function-full" depends="prepare">

@@ -11,13 +11,16 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
+import org.mozilla.javascript.ClassShutter;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
-import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.NativeObject;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.UniqueTag;
 import org.cheminfo.function.Function;
-import org.cheminfo.function.basic.Console;
 import org.cheminfo.function.util.JavaScriptMin;
 import org.cheminfo.iplugin.ObjectFactory;
+import org.cheminfo.scripting.function.Console;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,7 +31,7 @@ public class ScriptingInstance implements Runnable {
 	//private ScriptEngineManager mgr=new ScriptEngineManager();
 	//private ScriptEngine jsEngine=mgr.getEngineByName("JavaScript");
 	private Context ctx;
-	private Scriptable scope;
+	private NativeObject scope;
 
 	private String script="";
 	private JSONObject result=null;
@@ -127,7 +130,9 @@ public class ScriptingInstance implements Runnable {
 		try {
 			ContextFactory factory = new ContextFactory();
 			ctx = factory.enterContext();
-			scope = ctx.initStandardObjects();
+			scope = (NativeObject)ctx.initStandardObjects();
+			initializeSandbox();
+
 			InputStream stream = getClass().getResourceAsStream("/org/cheminfo/function/scripting/apis.properties");
 			Properties javascriptProperties = readProperties(stream);
 			Set<Object> keySet = javascriptProperties.keySet();
@@ -138,7 +143,7 @@ public class ScriptingInstance implements Runnable {
 						if (DEBUG) System.out.println("Loading API: "+name);
 						String objectName=name.replaceAll(".js","");
 						objectName = objectName.substring(0,1).toUpperCase()+objectName.substring(1);
-						String fullClassName="org.cheminfo.function.basic."+objectName;
+						String fullClassName="org.cheminfo.scripting.function."+objectName;
 
 						loadJavaAPI(fullClassName,(String)o);       
 						InputStream is = getClass().getResourceAsStream("/org/cheminfo/function/scripting/"+name);
@@ -328,13 +333,22 @@ public class ScriptingInstance implements Runnable {
 	}
 
 	public void addObjectToScope(String nameInScope, Object o) {
-		scope.put(nameInScope, scope, o);
+		ScriptableObject.putConstProperty(scope, nameInScope, o);
+		if(DEBUG)System.out.println(nameInScope+"added to scope.");
+		//scope.put(nameInScope, scope, o);
 		//jsEngine.put(nameInScope, o);
 	}
 
 	public Object getObjectFromScope(String nameInScope){
-		return scope.get(nameInScope, scope);
+		//System.out.println(scope.get(nameInScope, scope).getClass().getName());
+		//return scope.get(nameInScope, scope);
 		//return jsEngine.get(nameInScope);
+		Object value = ScriptableObject.getProperty(scope, nameInScope);
+		if(value == UniqueTag.NOT_FOUND) {
+			if(DEBUG)System.out.println(nameInScope+" not found !");
+			return null;
+		}
+		return value;
 	}
 
 
@@ -412,7 +426,24 @@ public class ScriptingInstance implements Runnable {
 		// TODO Auto-generated method stub
 		this.result=this.runScript(this.script);
 	}
-
-
+	
+	public void initializeSandbox() {
+		if(!ctx.hasClassShutter()) {
+			ctx.setClassShutter(new ClassShutter() {
+				@Override
+				public boolean visibleToScripts(String fullClassName) {
+					if(fullClassName=="java.lang.String" ||
+							fullClassName.startsWith("org.cheminfo.scripting") ||
+							fullClassName.startsWith("org.json.")
+							) return true;
+					else return false;
+				}
+			});
+		}
+	}
+	
+	public void closeContext() {
+		
+	}
 
 }

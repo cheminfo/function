@@ -1,4 +1,4 @@
-package org.cheminfo.function.basic;
+package org.cheminfo.scripting.function;
 
 
 import java.util.Date;

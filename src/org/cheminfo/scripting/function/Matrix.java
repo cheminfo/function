@@ -1,4 +1,4 @@
-package org.cheminfo.function.basic;
+package org.cheminfo.scripting.function;
 
 import org.cheminfo.function.Function;
 import org.cheminfo.function.util.ArrayConverter;

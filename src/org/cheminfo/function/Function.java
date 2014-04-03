@@ -5,8 +5,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.cheminfo.function.basic.Console;
 import org.cheminfo.function.scripting.ScriptingInstance;
+import org.cheminfo.scripting.function.Console;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
