@@ -4,7 +4,7 @@ var jexport;
 	var TOFIXED=5;
 
 	Core.objectToJson = function(myObject){
-		if(myObject==null) {
+		if(myObject==null || typeof(myObject)==="undefined") {
 			return 'null';
 		}
 		if(myObject instanceof Array) {
@@ -14,9 +14,12 @@ var jexport;
 				appendResult(javaObject,i,myObject[i]);
 			return javaObject;
 		}
-		if (myObject instanceof java.lang.Object) {
+		if(myObject.getClass) {
 			return Core.objectToJson(JSON.parse(org.json.JSONObject.valueToString(myObject)));
 		}
+		/*if (myObject instanceof java.lang.Object) {
+			return Core.objectToJson(JSON.parse(org.json.JSONObject.valueToString(myObject)));
+		}*/
 
 		switch(typeof myObject){
 		case "number":

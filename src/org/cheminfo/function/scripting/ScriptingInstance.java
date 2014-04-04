@@ -14,9 +14,12 @@ import java.util.Set;
 import org.mozilla.javascript.ClassShutter;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
+import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.UniqueTag;
+import org.mozilla.javascript.WrapFactory;
+import org.mozilla.javascript.Wrapper;
 import org.cheminfo.function.Function;
 import org.cheminfo.function.util.JavaScriptMin;
 import org.cheminfo.iplugin.ObjectFactory;
@@ -130,6 +133,7 @@ public class ScriptingInstance implements Runnable {
 		try {
 			ContextFactory factory = new ContextFactory();
 			ctx = factory.enterContext();
+			ctx.setWrapFactory(new WrapFactory());
 			scope = (NativeObject)ctx.initStandardObjects();
 			initializeSandbox();
 
@@ -158,7 +162,7 @@ public class ScriptingInstance implements Runnable {
 		} catch (IOException e) {
 			System.out.println("javascript properties could not be read");
 		}
-		addObjectToScope("out", System.out);
+		//addObjectToScope("out", System.out);
 	}
 
 	/**
@@ -333,7 +337,8 @@ public class ScriptingInstance implements Runnable {
 	}
 
 	public void addObjectToScope(String nameInScope, Object o) {
-		ScriptableObject.putConstProperty(scope, nameInScope, o);
+		Object wrapped = ctx.getWrapFactory().wrap(ctx, scope, o, null);
+		scope.defineProperty(nameInScope, wrapped, 0);
 		if(DEBUG)System.out.println(nameInScope+"added to scope.");
 		//scope.put(nameInScope, scope, o);
 		//jsEngine.put(nameInScope, o);
@@ -347,6 +352,8 @@ public class ScriptingInstance implements Runnable {
 		if(value == UniqueTag.NOT_FOUND) {
 			if(DEBUG)System.out.println(nameInScope+" not found !");
 			return null;
+		} if(value instanceof Wrapper) {
+			return ((Wrapper)value).unwrap();
 		}
 		return value;
 	}
@@ -383,7 +390,10 @@ public class ScriptingInstance implements Runnable {
 		
 		try {
 			addObjectToScope("toReturn",toReturn);
+
+			
 			ctx.evaluateString(scope, script, null, 0, null);
+
 			//jsEngine.eval(script);
 			/*
 			try {
@@ -392,12 +402,12 @@ public class ScriptingInstance implements Runnable {
 				e.printStackTrace(System.out);
 			}
 			 */
-		} /*catch (ScriptException e) {
+		} catch (EvaluatorException e) {
 			e.printStackTrace(System.out);
 			if (console!=null) {
 				console.log(Console.FATAL,"",e.getMessage(),"");
 			}
-		}*/ finally {
+		} finally {
 			if (console!=null) {
 				try {
 					toReturn.put("_logs", console.getLogs());
@@ -433,6 +443,10 @@ public class ScriptingInstance implements Runnable {
 				@Override
 				public boolean visibleToScripts(String fullClassName) {
 					if(fullClassName=="java.lang.String" ||
+							fullClassName=="java.lang.Class" ||
+							fullClassName=="java.lang.Package" ||
+							fullClassName=="java.lang.Object" ||
+							fullClassName=="org.jblas.DoubleMatrix" ||
 							fullClassName.startsWith("org.cheminfo.scripting") ||
 							fullClassName.startsWith("org.json.")
 							) return true;
