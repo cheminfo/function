@@ -447,7 +447,7 @@ public class ScriptingInstance implements Runnable {
 							fullClassName=="java.lang.Package" ||
 							fullClassName=="java.lang.Object" ||
 							fullClassName=="org.jblas.DoubleMatrix" ||
-							fullClassName.startsWith("org.cheminfo.scripting") ||
+							fullClassName.contains(".scripting.") ||
 							fullClassName.startsWith("org.json.")
 							) return true;
 					else return false;
