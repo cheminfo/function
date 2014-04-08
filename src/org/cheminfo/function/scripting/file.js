@@ -27,9 +27,9 @@ var __context = this;
 				if(type===0)
 					return false;
 				if(type===2)
-					return path.replace(/\/$/,"");
+					return path.replace(/\/?$/,"/");
 				else
-					return path.replace(/\/[^\/]*$/,"");
+					return path.replace(/\/?[^\/]*$/,"/");
 			},
 			
 			getCanonicalPath: function(path) {
@@ -38,7 +38,7 @@ var __context = this;
 				if(urlReg.test(path)) // For plugins that deal with urls
 					return path;
 				if (path.charAt(0) !== "/")
-					return File.getCanonicalPath(Global.currentDir + "/" + path);
+					return File.getCanonicalPath(Global.currentDir + path);
 				// Remove any single dots
 				var newpath = path.replace(/\/\.?(?=\/)/g, '');
 				// Remove any trailing single dots.
