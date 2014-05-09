@@ -314,12 +314,12 @@ public class Default extends Function{
             }
             
         	HttpGet httpget = new HttpGet(urlString);
-        	
+
             if(options.containsKey("username") && options.containsKey("password")) {
             	String credentials = new String(Base64.encodeBase64((options.get("username")+":"+options.get("password")).getBytes()));
             	httpget.addHeader("Authorization", "Basic "+ credentials);
             }
-        	
+
         	HttpResponse response = httpclient.execute(httpget);
             HttpEntity resEntity = response.getEntity();
 

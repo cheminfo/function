@@ -238,6 +238,9 @@ var __context = this;
 			 * @function		get(url)
 			 * Returns the content of the URL
 			 * @param	url:string		Full URL for the get
+			 * @param	options:+Object		Object containing the options
+			 * @option	username			Username for HTTP authorization
+			 * @option	password			Password for HTTP authorization
 			 * @return	string 
 			 */
 			get: function(url, options) {
@@ -290,10 +293,13 @@ var __context = this;
 			 * @function		getJSON(url)
 			 * Returns the content of the URL as a json object
 			 * @param	filename:string		Name of the file
+			 * @param	options:+Object		Object containing the options
+			 * @option	username			Username for HTTP authorization
+			 * @option	password			Password for HTTP authorization
 			 * @return	+Object	Result of parsing the content as a JSON
 			 */
 			getJSON: function(url, options) {
-				return JSON.parse(File.get(url));
+				return JSON.parse(File.get(url, options));
 			},
 			
 			/**
