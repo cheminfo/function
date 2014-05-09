@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.util.HashMap;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -26,7 +27,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
-
 import org.mozilla.javascript.Scriptable;
 
 
@@ -311,9 +311,15 @@ public class Default extends Function{
             	for (String key : parameters.keySet()) {
                 	urlString+="&"+URLEncoder.encode(key,"UTF-8")+"="+URLEncoder.encode(parameters.get(key),"UTF-8");
                 }
-            }            
+            }
             
         	HttpGet httpget = new HttpGet(urlString);
+        	
+            if(options.containsKey("username") && options.containsKey("password")) {
+            	String credentials = new String(Base64.encodeBase64((options.get("username")+":"+options.get("password")).getBytes()));
+            	httpget.addHeader("Authorization", "Basic "+ credentials);
+            }
+        	
         	HttpResponse response = httpclient.execute(httpget);
             HttpEntity resEntity = response.getEntity();
 
