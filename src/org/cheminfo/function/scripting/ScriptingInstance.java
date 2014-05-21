@@ -109,6 +109,7 @@ public class ScriptingInstance implements Runnable {
 			String canonical = new File(path).getCanonicalPath().replaceAll("\\\\", "/");
 			this.runScript("var Global={};"+
 					"Global.basedir='"+canonical+"';"+
+					"Global.currentDir='"+canonical+"';"+
 					"Global.basedirkey='"+SecureFileManager.getPathKey(canonical)+"';"+
 					"Global.serverURL='';"
 					);
