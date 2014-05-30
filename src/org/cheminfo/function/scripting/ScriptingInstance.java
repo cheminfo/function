@@ -323,7 +323,7 @@ public class ScriptingInstance implements Runnable {
 		Iterator<String> keys = newHelp.keys();
 		while (keys.hasNext()) {
 			String key=keys.next();
-			if(key.equals("SD") || key.equals("Optimizer") || key.equals("Equilibrium"))
+			if(key.equals("Optimizer") || key.equals("Equilibrium"))
 				continue;
 			Object newItem = newHelp.get(key);
 			if(helpToFill.has(key)) {
