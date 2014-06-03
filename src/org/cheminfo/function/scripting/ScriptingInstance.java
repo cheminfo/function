@@ -376,7 +376,6 @@ public class ScriptingInstance implements Runnable {
 	 */
 	public JSONObject runScript(String script) {
 
-		//	JSONObject allToReturn = new JSONObject();
 		JSONObject toReturn=new JSONObject();
 		
 		script = "try{"+script+"}catch(e){"
@@ -391,18 +390,9 @@ public class ScriptingInstance implements Runnable {
 		
 		try {
 			addObjectToScope("toReturn",toReturn);
-
 			
-			ctx.evaluateString(scope, script, null, 0, null);
+			ctx.evaluateString(scope, script, null, 1, null);
 
-			//jsEngine.eval(script);
-			/*
-			try {
-				allToReturn.put("result", toReturn);
-			} catch (JSONException e) {
-				e.printStackTrace(System.out);
-			}
-			 */
 		} catch (EvaluatorException e) {
 			e.printStackTrace(System.out);
 			if (console!=null) {
