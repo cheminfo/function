@@ -73,20 +73,23 @@ public class Console extends Function{
 	
 	/**
 	 * 
-	 * @param id: The id of the object to store the message
-	 * @param caller: The name of the class or the function that generates it.
-	 * @param info: The info message
+	 * @param id: The log level
+	 * @param info: The info message(s)
 	 */
-	public boolean log(int id, String info){
+	public boolean log(int id, Object... info){
 		if (id<logLevel) return false;
 		JSONObject log = new JSONObject();
 		JSONObject logEntry= new JSONObject();
+		JSONArray infos = new JSONArray();
 		try {
 			log.put("type", "log").put("value", logEntry);
 			logEntry.put("level", id);
 			logEntry.put("label", getErrorLabel(id));
 			logEntry.put("time", (new Date()).getTime()-startingDate);
-			logEntry.put("description", info);
+			logEntry.put("description", infos);
+			for(Object inf : info) {
+				infos.put(inf);
+			}
 			this.logs.put(logEntry);
 			logCallBack.callback(log);
 		} catch (JSONException e) {

@@ -206,3 +206,22 @@ String.prototype.endsWith = function(str) {
 String.prototype.contains = function(str, startIndex) {
 	return -1 !== String.prototype.indexOf.call(this, str, startIndex);
 };
+/**
+ * @function repeat(count)
+ * The repeat() method copies the current string a given times and returns the new string.
+ * @param	count:number	An integer between 0 and +∞
+ * @return	string
+ * @link	https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/repeat
+ */
+String.prototype.repeat = function(count) {
+	count = parseInt(count);
+	if(count===0 || isNaN(count))
+		return "";
+	if(count < 0)
+		throw RangeError("repeat count must be non-negative")
+	var res = "";
+	for(var i = 0; i < count; i++) {
+		res+=this;
+	}
+	return res;
+};

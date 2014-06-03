@@ -7,11 +7,11 @@ var console;
 (function(){
 
 	function sendLog(type, values) {
-		var message = "<br>";
+		var args = [type];
 		for(var i = 0; i < values.length; i++) {
-			message += Core.objectToJson(values[i])+"<br>";
+			args.push(Core.objectToJson(values[i]));
 		}
-		CONSOLELIB.log(type, message);
+		CONSOLELIB.log.apply(CONSOLELIB, args);
 	}
 
 	console = {
