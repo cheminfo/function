@@ -406,7 +406,7 @@ public class ScriptingInstance implements Runnable {
 		} catch (EvaluatorException e) {
 			e.printStackTrace(System.out);
 			if (console!=null) {
-				console.log(Console.FATAL,"",e.getMessage(),"");
+				console.log(Console.FATAL,e.getMessage());
 			}
 		} finally {
 			if (console!=null) {

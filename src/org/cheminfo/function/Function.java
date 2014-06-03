@@ -302,7 +302,7 @@ public abstract class Function {
 	 */
 	private void logAppend(int id, String caller, String info){
 		if (scriptingInstance!=null) {
-			scriptingInstance.getConsole().log(id, caller, info, "");
+			scriptingInstance.getConsole().log(id, info);
 		}	
 	}
 

@@ -77,7 +77,7 @@ public class Console extends Function{
 	 * @param caller: The name of the class or the function that generates it.
 	 * @param info: The info message
 	 */
-	public boolean log(int id, String caller, String info, String stacktrace){
+	public boolean log(int id, String info){
 		if (id<logLevel) return false;
 		JSONObject log = new JSONObject();
 		JSONObject logEntry= new JSONObject();
@@ -85,9 +85,7 @@ public class Console extends Function{
 			log.put("type", "log").put("value", logEntry);
 			logEntry.put("level", id);
 			logEntry.put("label", getErrorLabel(id));
-			logEntry.put("stacktrace", stacktrace);
 			logEntry.put("time", (new Date()).getTime()-startingDate);
-			logEntry.put("caller", caller);
 			logEntry.put("description", info);
 			this.logs.put(logEntry);
 			logCallBack.callback(log);
