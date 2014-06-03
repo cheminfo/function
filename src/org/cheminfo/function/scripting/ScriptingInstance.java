@@ -378,7 +378,7 @@ public class ScriptingInstance implements Runnable {
 
 		JSONObject toReturn=new JSONObject();
 		
-		script = "try{"+script+"}catch(e){"
+		script = "try{;"+script+";}catch(e){"
 				+ "if(e.stack){"
 				+ "var lines = e.stack.split('\\n');"
 				+ "var line = lines[lines.length-2].match(/\\d+/)[0];"
