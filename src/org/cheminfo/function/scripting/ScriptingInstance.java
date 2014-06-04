@@ -378,7 +378,7 @@ public class ScriptingInstance implements Runnable {
 
 		JSONObject toReturn=new JSONObject();
 		
-		script = "try{;"+script+";}catch(e){"
+		script = "try{\n"+script+"\n}catch(e){"
 				+ "if(e.stack){"
 				+ "var lines = e.stack.split('\\n');"
 				+ "var line = lines[lines.length-2].match(/\\d+/)[0];"
@@ -391,7 +391,7 @@ public class ScriptingInstance implements Runnable {
 		try {
 			addObjectToScope("toReturn",toReturn);
 			
-			ctx.evaluateString(scope, script, null, 1, null);
+			ctx.evaluateString(scope, script, null, 0, null);
 
 		} catch (EvaluatorException e) {
 			e.printStackTrace(System.out);
