@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.AccessControlException;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
@@ -74,6 +76,8 @@ public class ScriptingInstance implements Runnable {
 		this.pluginsFolder=pluginsFolder;
 		this.initializeAPIs();
 		console=(Console)getObjectFromScope("CONSOLELIB");
+		//if(DEBUG) 
+		//addObjectToScope("out",System.out);
 	}
 
 	/**
@@ -197,24 +201,38 @@ public class ScriptingInstance implements Runnable {
 	private void loadInternalAPI(String name){
 		//May be we are trying to load it from an applet.
 		try {
-			InputStream stream = getClass().getResourceAsStream(name+"/plugin.properties");
+			InputStream stream = null;
+			stream = classLoader.getResourceAsStream(name+"/plugin.properties");
+			if(stream==null){
+				Enumeration<URL> resources =  getClass().getClassLoader().getResources(name+"plugin.properties");//classLoader.getResources(name+"/plugin2.properties");
+				URL url=null;
+				while(resources.hasMoreElements()){
+					URL tmp = resources.nextElement();
+					if(!tmp.getPath().contains("eclipse"))
+						url = tmp;
+				}
+				stream = url.openStream();
+			}
+			//InputStream 
+			//System.out.println(classLoader.getResources(name+"/plugin.properties").toURI().toString());
 			/*File a = new File(name+"/plugin.properties");
 			System.out.println(a.getCanonicalPath()+" "+a.getAbsolutePath());
-			System.out.println(name+"/plugin.properties");*/
+			System.out.println(name+"/plugin.properties");
 
-			/*BufferedReader in = new BufferedReader(new InputStreamReader(stream));
+			BufferedReader in = new BufferedReader(new InputStreamReader(stream));
 			String inputLine;
 			while ((inputLine = in.readLine()) != null)
 			    System.out.println(inputLine);
 			in.close();*/
 
 			Properties javascriptProperties = readProperties(stream);
+			//System.out.println("XX"+javascriptProperties);
 			Set<Object> keySet = javascriptProperties.keySet();
 			for (Object o : keySet) {
 				if (javascriptProperties.get(o) instanceof String) {
 					String nameClass = (String)javascriptProperties.get(o);
 					this.loadJavaAPI(nameClass,o.toString());
-
+					if(DEBUG)System.out.println("Loading internal plugin: "+nameClass);
 					InputStream is = getClass().getResourceAsStream("/"+nameClass.replace(".","/")+".js");
 					loadJSAPI(is);
 				}
@@ -376,9 +394,10 @@ public class ScriptingInstance implements Runnable {
 	 */
 	public JSONObject runScript(String script) {
 
+		//	JSONObject allToReturn = new JSONObject();
 		JSONObject toReturn=new JSONObject();
 		
-		script = "try{\n"+script+"\n}catch(e){"
+		script = "try{"+script+"}catch(e){"
 				+ "if(e.stack){"
 				+ "var lines = e.stack.split('\\n');"
 				+ "var line = lines[lines.length-2].match(/\\d+/)[0];"
@@ -390,13 +409,22 @@ public class ScriptingInstance implements Runnable {
 		
 		try {
 			addObjectToScope("toReturn",toReturn);
+
 			
 			ctx.evaluateString(scope, script, null, 0, null);
 
+			//jsEngine.eval(script);
+			/*
+			try {
+				allToReturn.put("result", toReturn);
+			} catch (JSONException e) {
+				e.printStackTrace(System.out);
+			}
+			 */
 		} catch (EvaluatorException e) {
 			e.printStackTrace(System.out);
 			if (console!=null) {
-				console.log(Console.FATAL,e.getMessage());
+				console.log(Console.FATAL,"",e.getMessage(),"");
 			}
 		} finally {
 			if (console!=null) {
