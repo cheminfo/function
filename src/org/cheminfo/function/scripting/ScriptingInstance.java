@@ -33,7 +33,7 @@ import org.json.JSONObject;
 public class ScriptingInstance implements Runnable {
 	private static final boolean DEBUG=false;
 
-	//private ScriptEngineManager mgr=new ScriptEngineManager();
+	//private ScriptEngineManager  mgr=new ScriptEngineManager();
 	//private ScriptEngine jsEngine=mgr.getEngineByName("JavaScript");
 	private Context ctx;
 	private NativeObject scope;
