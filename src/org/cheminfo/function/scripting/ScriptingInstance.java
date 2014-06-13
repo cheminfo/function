@@ -13,6 +13,12 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
+import org.cheminfo.function.Function;
+import org.cheminfo.function.util.JavaScriptMin;
+import org.cheminfo.iplugin.ObjectFactory;
+import org.cheminfo.scripting.function.Console;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.mozilla.javascript.ClassShutter;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
@@ -22,36 +28,29 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.UniqueTag;
 import org.mozilla.javascript.WrapFactory;
 import org.mozilla.javascript.Wrapper;
-import org.cheminfo.function.Function;
-import org.cheminfo.function.util.JavaScriptMin;
-import org.cheminfo.iplugin.ObjectFactory;
-import org.cheminfo.scripting.function.Console;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 public class ScriptingInstance implements Runnable {
+	
 	private static final boolean DEBUG=false;
 
-	//private ScriptEngineManager  mgr=new ScriptEngineManager();
-	//private ScriptEngine jsEngine=mgr.getEngineByName("JavaScript");
 	private Context ctx;
 	private NativeObject scope;
 
 	private String script="";
-	private JSONObject result=null;
 	private String pluginsFolder=null;
 	private URLClassLoader classLoader;
-	//private JavaScriptMin javaScriptProcessor;
+
 	private JSONObject scriptingHelp=null;
-	//private JSONObject ternHelp=null;
+
 	private boolean helpOK=false;
 	private Console console=null;
+
+	private JSONObject result;
 
 	public ScriptingInstance() {
 		this("plugins");
 	}
-
 
 	/**
 	 * 
@@ -405,15 +404,14 @@ public class ScriptingInstance implements Runnable {
 				+ "}";
 		
 		try {
-			addObjectToScope("toReturn",toReturn);
-
 			
+			addObjectToScope("toReturn",toReturn);
 			ctx.evaluateString(scope, script, null, 0, null);
 
 		} catch (EvaluatorException e) {
 			e.printStackTrace(System.out);
 			if (console!=null) {
-				console.log(Console.FATAL,"",e.getMessage(),"");
+				console.log(Console.FATAL,e.getMessage());
 			}
 		} finally {
 			if (console!=null) {
@@ -441,7 +439,6 @@ public class ScriptingInstance implements Runnable {
 	}
 
 	public void run() {
-		// TODO Auto-generated method stub
 		this.result=this.runScript(this.script);
 	}
 	
