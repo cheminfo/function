@@ -76,8 +76,6 @@ public class ScriptingInstance implements Runnable {
 		this.pluginsFolder=pluginsFolder;
 		this.initializeAPIs();
 		console=(Console)getObjectFromScope("CONSOLELIB");
-		//if(DEBUG) 
-		//addObjectToScope("out",System.out);
 	}
 
 	/**
@@ -226,7 +224,7 @@ public class ScriptingInstance implements Runnable {
 			in.close();*/
 
 			Properties javascriptProperties = readProperties(stream);
-			//System.out.println("XX"+javascriptProperties);
+
 			Set<Object> keySet = javascriptProperties.keySet();
 			for (Object o : keySet) {
 				if (javascriptProperties.get(o) instanceof String) {
@@ -248,7 +246,7 @@ public class ScriptingInstance implements Runnable {
 		try {
 			if (DEBUG) System.out.println("Jar name "+pluginName);
 			InputStream stream = ObjectFactory.readProperties(pluginName,"plugin.properties",classLoader);
-			//System.out.println();
+
 			Properties javascriptProperties = readProperties(stream);
 			String name=null;
 			try {
@@ -394,10 +392,9 @@ public class ScriptingInstance implements Runnable {
 	 */
 	public JSONObject runScript(String script) {
 
-		//	JSONObject allToReturn = new JSONObject();
 		JSONObject toReturn=new JSONObject();
 		
-		script = "try{"+script+"}catch(e){"
+		script = "try{\n"+script+"\n}catch(e){"
 				+ "if(e.stack){"
 				+ "var lines = e.stack.split('\\n');"
 				+ "var line = lines[lines.length-2].match(/\\d+/)[0];"
@@ -413,14 +410,6 @@ public class ScriptingInstance implements Runnable {
 			
 			ctx.evaluateString(scope, script, null, 0, null);
 
-			//jsEngine.eval(script);
-			/*
-			try {
-				allToReturn.put("result", toReturn);
-			} catch (JSONException e) {
-				e.printStackTrace(System.out);
-			}
-			 */
 		} catch (EvaluatorException e) {
 			e.printStackTrace(System.out);
 			if (console!=null) {
