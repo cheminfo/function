@@ -30,9 +30,8 @@ import org.mozilla.javascript.NativeArray;
  * 
  */
 public class Util extends Function{
-	public void sleep(long millis) {
-		long start = System.currentTimeMillis();
-		while (System.currentTimeMillis() - start <= millis);
+	public void sleep(long millis) throws InterruptedException {
+        Thread.sleep(millis);
 	}
 	
 	public String encodeBase64(byte[] value) {
@@ -104,7 +103,6 @@ public class Util extends Function{
 	    		oneLine.put("info", caused);
 		    }
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	    return array.toString();
@@ -140,7 +138,6 @@ public class Util extends Function{
 			json.put("result", email.send());
 		} catch (Exception e) {
 			this.appendError("Util", e.toString());
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return json.toString();
@@ -158,9 +155,9 @@ public class Util extends Function{
 	
 	public double checkArray(double[] newArray){
 			double h=0;
-			for(int i=0; i<newArray.length;i++){
-				h+=newArray[i];
-			}
+        for (double aNewArray : newArray) {
+            h += aNewArray;
+        }
 		
 		
 		

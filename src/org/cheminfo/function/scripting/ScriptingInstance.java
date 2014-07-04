@@ -55,7 +55,6 @@ public class ScriptingInstance implements Runnable {
 	/**
 	 * 
 	 * @param pluginsFolder
-	 * @param helpFolder
 	 */
 	public ScriptingInstance(String pluginsFolder) {
 		if (DEBUG) System.out.println("ScriptingInstance: creating instance");
@@ -80,7 +79,6 @@ public class ScriptingInstance implements Runnable {
 	/**
 	 * That creates a new ScriptingInstance
 	 * @param pluginsFolder: The folder where the plugins are stored
-	 * @param helpFolder: An option parameter that specify where to store the JSON help. If null it does not save it anywhere.
 	 * @param classLoader: The classLoader for plugins.
 	 */
 	public ScriptingInstance(String pluginsFolder, URLClassLoader classLoader) {
@@ -145,7 +143,7 @@ public class ScriptingInstance implements Runnable {
 			for (Object o : keySet) {
 				if (javascriptProperties.get(o) instanceof String) {
 					String name = (String)javascriptProperties.get(o);
-					if (name.indexOf(".js") != -1){
+					if (name.contains(".js")){
 						if (DEBUG) System.out.println("Loading API: "+name);
 						String objectName=name.replaceAll(".js","");
 						objectName = objectName.substring(0,1).toUpperCase()+objectName.substring(1);
@@ -198,7 +196,7 @@ public class ScriptingInstance implements Runnable {
 	private void loadInternalAPI(String name){
 		//May be we are trying to load it from an applet.
 		try {
-			InputStream stream = null;
+			InputStream stream;
 			stream = classLoader.getResourceAsStream(name+"/plugin.properties");
 			if(stream==null){
 				Enumeration<URL> resources =  getClass().getClassLoader().getResources(name+"plugin.properties");//classLoader.getResources(name+"/plugin2.properties");
@@ -241,7 +239,7 @@ public class ScriptingInstance implements Runnable {
 
 	private void loadPlugin(String pluginName){
 		if (DEBUG) System.out.println("Loading plugin "+pluginName);
-		String alias = "";
+		String alias;
 		try {
 			if (DEBUG) System.out.println("Jar name "+pluginName);
 			InputStream stream = ObjectFactory.readProperties(pluginName,"plugin.properties",classLoader);
@@ -294,7 +292,7 @@ public class ScriptingInstance implements Runnable {
 
 	/**
 	 * That loads the javascript frontage and creates the help JSON from the comments.
-	 * @param name
+	 * @param is
 	 */
 	private void loadJSAPI(InputStream is){
 		//InputStream is = getClass().getResourceAsStream(name);
@@ -447,15 +445,13 @@ public class ScriptingInstance implements Runnable {
 			ctx.setClassShutter(new ClassShutter() {
 				@Override
 				public boolean visibleToScripts(String fullClassName) {
-					if(fullClassName=="java.lang.String" ||
-							fullClassName=="java.lang.Class" ||
-							fullClassName=="java.lang.Package" ||
-							fullClassName=="java.lang.Object" ||
-							fullClassName=="org.jblas.DoubleMatrix" ||
-							fullClassName.contains(".scripting.") ||
-							fullClassName.startsWith("org.json.")
-							) return true;
-					else return false;
+                    return fullClassName.equals("java.lang.String") ||
+                            fullClassName.equals("java.lang.Class") ||
+                            fullClassName.equals("java.lang.Package") ||
+                            fullClassName.equals("java.lang.Object") ||
+                            fullClassName.equals("org.jblas.DoubleMatrix") ||
+                            fullClassName.contains(".scripting.") ||
+                            fullClassName.startsWith("org.json.");
 				}
 			});
 		}

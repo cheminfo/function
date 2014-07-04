@@ -52,7 +52,7 @@ public class Default extends Function{
 	/**
 	 * This function opens a file for writing in a secure way. Only files within a given safe path
 	 * can be opened. By default the safe path is "./"
-	 * @param fileName
+	 * @param filename
 	 * @return It return a PrintWriter to the file
 	 * if root+fileName point to a file inside root. It returns null otherwise. 
 	 */
@@ -105,7 +105,6 @@ public class Default extends Function{
 	 * @param basedir
 	 * @param key
 	 * @param filename
-	 * @param content
 	 * @return
 	 */
 	public boolean mkdir(String basedir, String key, String filename) {
@@ -307,7 +306,7 @@ public class Default extends Function{
             HashMap<String,String> parameters = readOptions(parametersObject);
 
             if (parameters.size()>0) {
-            	if (urlString.indexOf("?")==-1) urlString+="?";
+            	if (!urlString.contains("?")) urlString+="?";
             	for (String key : parameters.keySet()) {
                 	urlString+="&"+URLEncoder.encode(key,"UTF-8")+"="+URLEncoder.encode(parameters.get(key),"UTF-8");
                 }

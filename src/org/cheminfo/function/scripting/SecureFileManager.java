@@ -51,7 +51,7 @@ public class SecureFileManager {
 
 			return canonicalFilePath;
 			
-		} catch (IOException e1) {;
+		} catch (IOException e1) {
 			e1.printStackTrace();
 			return null;
 		}
@@ -193,11 +193,11 @@ public class SecureFileManager {
 		String fullFilename=getValidatedFilename(basedir, key, filename);
 		if (fullFilename==null) return null;
 		String line="";
-		StringBuffer text=new StringBuffer();
+		StringBuilder text=new StringBuilder();
 		try{
 			BufferedReader br = new BufferedReader(new FileReader(fullFilename));
 			while((line = br.readLine())!=null){
-				text.append(line+"\r\n");
+				text.append(line).append("\r\n");
 			}
 			br.close();
 		} catch(FileNotFoundException ex){
@@ -238,7 +238,7 @@ public class SecureFileManager {
 			for (File file : files) {
 				if ((contains==null && matches==null) || 
 						(matches!=null && file.getName().matches(matches)) ||
-						(contains!=null && file.getName().toLowerCase().indexOf(contains)>-1)){
+						(contains!=null && file.getName().toLowerCase().contains(contains))){
 					if (file.isDirectory()) {
 						list.add(relativeDirectory+"/"+file.getName()+"/");
 					} else {
