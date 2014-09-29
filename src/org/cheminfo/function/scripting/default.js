@@ -1,5 +1,12 @@
 var Core = {};
 var jexport;
+
+// Keep a reference to the java packages so they can be overriden in scripts
+Core.org = org;
+Core.com = com;
+Core.java = java;
+Core.net = net;
+
 (function(){
 	var TOFIXED=5;
 
@@ -8,17 +15,17 @@ var jexport;
 			return 'null';
 		}
 		if(myObject instanceof Array) {
-			var javaObject=new org.json.JSONArray();
+			var javaObject=new Core.org.json.JSONArray();
 			var lng=myObject.length;
 			for(var i=0;i<lng;i++)
 				appendResult(javaObject,i,myObject[i]);
 			return javaObject;
 		}
 		if(myObject.getClass) {
-			return Core.objectToJson(JSON.parse(org.json.JSONObject.valueToString(myObject)));
+			return Core.objectToJson(JSON.parse(Core.org.json.JSONObject.valueToString(myObject)));
 		}
 		/*if (myObject instanceof java.lang.Object) {
-			return Core.objectToJson(JSON.parse(org.json.JSONObject.valueToString(myObject)));
+			return Core.objectToJson(JSON.parse(Core.org.json.JSONObject.valueToString(myObject)));
 		}*/
 
 		switch(typeof myObject){
@@ -29,7 +36,7 @@ var jexport;
 			if(myObject.toJSON && (typeof myObject.toJSON == "function")) {
 				return Core.objectToJson(myObject.toJSON());
 			} else {
-				var javaObject = new org.json.JSONObject();
+				var javaObject = new Core.org.json.JSONObject();
 				for (var name in myObject)
 					appendResult(javaObject,name,myObject[name]);
 				return javaObject;
@@ -59,7 +66,7 @@ var jexport;
 			appendResult(toReturn,varName,value);
 			return toReturn;
 		} else {
-			var metaObject = new org.json.JSONObject();
+			var metaObject = new Core.org.json.JSONObject();
 			if (!asURL) {
 				metaObject.put("value",javaConvert(value));
 			} else {
